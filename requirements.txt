@@ -1,0 +1,4 @@
+flask
+pandas
+pandas_datareader
+numpy
