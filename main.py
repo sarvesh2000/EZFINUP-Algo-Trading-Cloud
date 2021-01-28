@@ -64,7 +64,7 @@ def index():
     result = {"dates": stock['Date'].dt.date.values.tolist(), "price": stock['Close'].values.tolist(), "SMA30": Sma30['Prev Close Price'].values.tolist(), "SMA100": Sma100['Prev Close Price'].values.tolist(), "buy_point": data['Buy_Signal_Price'].values.tolist(), "sell_point": data['Sell_Signal_Price'].values.tolist()}
     # print("Result\n")
     # print(result)
-    return result
+    return {"result": result}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
