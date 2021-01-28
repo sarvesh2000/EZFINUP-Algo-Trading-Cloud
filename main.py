@@ -2,6 +2,7 @@ from flask import Flask, request
 import pandas as pd
 import numpy as np
 import pandas_datareader as pdr
+import math
 from datetime import datetime
 
 app = Flask(__name__)
@@ -9,8 +10,8 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     stock = pdr.get_data_yahoo(request.args.get('stockname'))
-    print("DF")
-    print(stock)
+    # print("DF")
+    # print(stock)
     stock.reset_index(inplace=True, drop=False)
     # stock = df.reset_index()['Close']
     # print(stock)
@@ -23,6 +24,7 @@ def index():
     data['stock'] = stock['Close']
     data['Sma30'] = Sma30['Prev Close Price']
     data['Sma100'] = Sma100['Prev Close Price']
+    # print(Sma30['Prev Close Price'].fillna("NONE"))
 
     def buy_sell(data):
         sigPriceBuy = []
@@ -56,12 +58,12 @@ def index():
     data['Buy_Signal_Price'] = buy_sell[0]
     data['Sell_Signal_Price'] = buy_sell[1]
 
-    print("Stock")
-    print(stock['Date'])
+    # print("Stock")
+    # print(stock['Date'])
 
 
     # End Result in JSON
-    result = {"dates": stock['Date'].dt.date.values.tolist(), "price": stock['Close'].values.tolist(), "SMA30": Sma30['Prev Close Price'].values.tolist(), "SMA100": Sma100['Prev Close Price'].values.tolist(), "buy_point": data['Buy_Signal_Price'].values.tolist(), "sell_point": data['Sell_Signal_Price'].values.tolist()}
+    result = {"dates": stock['Date'].fillna("NONE").dt.date.values.tolist(), "price": stock['Close'].values.tolist(), "SMA30": Sma30['Prev Close Price'].fillna("NONE").values.tolist(), "SMA100": Sma100['Prev Close Price'].fillna("NONE").values.tolist(), "buy_point": data['Buy_Signal_Price'].fillna("NONE").values.tolist(), "sell_point": data['Sell_Signal_Price'].fillna("NONE").values.tolist()}
     # print("Result\n")
     # print(result)
     return result
